@@ -47,8 +47,7 @@ pipenv==2025.0.2
 platformdirs==4.3.8
 pluggy==1.6.0
 pycparser==3.0
-pydantic==2.5.0
-pydantic_core==2.14.1
+pydantic==1.10.15
 Pygments==2.20.0
 PyJWT==2.8.0
 pylint==3.3.7
