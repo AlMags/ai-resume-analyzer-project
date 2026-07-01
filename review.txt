@@ -1,0 +1,13 @@
+
+Summary:
+John Doe is a Software Engineer with 2 years of experience in Java application development. He has a proven ability to build REST APIs using Spring Boot, debug production issues, implement new features, and perform testing. He also possesses practical experience with SQL.
+
+Score:
+75
+
+Role:
+Mid-level Java Software Engineer
+
+-------------------
+
+
