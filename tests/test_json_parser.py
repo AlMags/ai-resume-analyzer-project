@@ -1,5 +1,5 @@
 import unittest
-from json_parser import parse_response
+from app.json_parser import parse_response
 
 class TestJsonParser(unittest.TestCase):
     def test_valid_json(self):
