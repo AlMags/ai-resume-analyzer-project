@@ -2,10 +2,10 @@ import os
 import json
 from google import genai
 from dotenv import load_dotenv
-from prompt_builder import build_resume_prompt
-from gemini_client import ask_gemini
-from json_parser import parse_response
-from save_candidate import save_candidate
+from app.prompt_builder import build_resume_prompt
+from app.gemini_client import ask_gemini
+from app.json_parser import parse_response
+from app.save_candidate import save_candidate
 
 # from google import genai -> imports Google's AI Library
 # from dotenv import load_dotenv -> allows python to read your .env file
