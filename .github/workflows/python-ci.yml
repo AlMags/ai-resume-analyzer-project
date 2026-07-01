@@ -37,6 +37,10 @@ jobs:
           python -c "import os; print('Current directory:', os.getcwd())"
           python -c "import sys; print('Python search path:'); print('\n'.join(sys.path))"
 
+      - name: Test importing app
+        run: |
+          python -c "import app"
+
       - name: Run tests
         run: |
           pytest
