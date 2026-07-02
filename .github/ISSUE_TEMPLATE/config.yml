@@ -1,0 +1,6 @@
+blank_issues_enabled: true
+
+contact_links:
+  - name: 📖 Project Documentation
+    url: https://github.com/AlMags/ai-resume-analyzer-project
+    about: Please review the documentation before opening an issue.
