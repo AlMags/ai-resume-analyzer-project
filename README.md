@@ -2,6 +2,10 @@
 
 An AI-powered resume analysis application built with Python and the Gemini API.
 
+## Overview
+
+---
+
 ## Features
 
 - Resume summarization
@@ -18,9 +22,37 @@ An AI-powered resume analysis application built with Python and the Gemini API.
 - pytest
 - GitHub Actions (coming soon)
 
-## Development Notes
+## Architecture
 
-This project follows Conventional Commits and GitHub Flow.
+---
+
+## Project Structure
+
+---
+
+## Installation
+
+---
+
+## Usage
+
+---
+
+## Running Tests
+
+---
+
+## Continuous Integration
+
+---
+
+## Roadmap
+
+---
+
+## License
+
+--
 
 ## Project Status
 
