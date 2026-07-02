@@ -1,0 +1,15 @@
+README.md
+pyproject.toml
+ai_resume_analyzer.egg-info/PKG-INFO
+ai_resume_analyzer.egg-info/SOURCES.txt
+ai_resume_analyzer.egg-info/dependency_links.txt
+ai_resume_analyzer.egg-info/top_level.txt
+app/__init__.py
+app/gemini_client.py
+app/json_parser.py
+app/main.py
+app/models.py
+app/prompt_builder.py
+app/save_candidate.py
+tests/test_json_parser.py
+tests/test_prompt_builder.py

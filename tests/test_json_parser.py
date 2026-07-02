@@ -13,7 +13,7 @@ class TestJsonParser(unittest.TestCase):
 
         result = parse_response(sample)
 
-        self.assertEqual(result["summary"], "Java Developer")
+        self.assertEqual(result.summary, "Java Developer")
 
     def test_invalid_json(self):
         sample = "Hello World"

@@ -29,18 +29,8 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-
-      - name: Debug Python Environment
-        run: |
-          pwd
-          ls -la
-          python -c "import os; print('Current directory:', os.getcwd())"
-          python -c "import sys; print('Python search path:'); print('\n'.join(sys.path))"
-
-      - name: Test importing app
-        run: |
-          python -c "import app"
+          pip install -e .
 
       - name: Run tests
         run: |
-          pytest
+          python -m pytest -v
