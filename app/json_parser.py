@@ -1,5 +1,5 @@
 import json
-from models import ResumeAnalysis
+from app.models import ResumeAnalysis
 
 def parse_response(response):
 

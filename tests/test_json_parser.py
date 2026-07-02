@@ -1,5 +1,5 @@
 import unittest
-from json_parser import parse_response
+from app.json_parser import parse_response
 
 class TestJsonParser(unittest.TestCase):
     def test_valid_json(self):
@@ -13,7 +13,7 @@ class TestJsonParser(unittest.TestCase):
 
         result = parse_response(sample)
 
-        self.assertEqual(result["summary"], "Java Developer")
+        self.assertEqual(result.summary, "Java Developer")
 
     def test_invalid_json(self):
         sample = "Hello World"

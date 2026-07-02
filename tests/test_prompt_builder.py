@@ -1,5 +1,5 @@
 import unittest
-from prompt_builder import build_resume_prompt
+from app.prompt_builder import build_resume_prompt
 
 class TestPromptBuilder(unittest.TestCase):
     def test_prompt_contains_resumse(self):
