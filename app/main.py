@@ -16,16 +16,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 RESUME_PATH = BASE_DIR / "data" / "resume.txt"
 
 def main():
-    load_dotenv() # loads your .env file
-
-    client = genai.Client(
-        api_key=os.getenv("GEMINI_API_KEY")
-        # gets the value of GEMINI_API_KEY from your .env file and returns it
-        # then creates an object that knows how to talk to Gemini i.e. "client"
-    )
-
-    print("Reading resume...")
-
     with RESUME_PATH.open("r", encoding="utf-8") as file:
         resume = file.read()
 
@@ -33,8 +23,6 @@ def main():
     # "r" -> read-only, other modes: w-"write" and a-"append"
     # "utf-8" -> tells python how to interpret the text
     # file.read -> uses your file variable and reads the entire file i.e. resume.txt
-
-    # print(resume) -> verify if the resume.txt is read
 
     prompt = build_resume_prompt(resume)
 
