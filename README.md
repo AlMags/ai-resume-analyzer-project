@@ -41,7 +41,7 @@ The application currently follows a modular architecture where each component ha
 - `gemini_client.py` communicates with the Google Gemini API.
 - `json_parser.py` converts the AI response into structured Python objects.
 - `models.py` defines shared data models.
-- `save_candidate.py` persists analysis results.
+- `candidate_storage.py` persists analysis results.
 - `main.py` orchestrates the overall workflow.
 
 This modular design keeps individual components focused on a single responsibility, making the application easier to test, maintain, and extend as new features are introduced.
@@ -56,7 +56,7 @@ ai-resume-analyzer/
 │   ├── gemini_client.py
 │   ├── prompt_builder.py
 │   ├── json_parser.py
-│   ├── save_candidate.py
+│   ├── candidate_storage.py
 │   ├── models.py
 │   └── __init__.py
 │
