@@ -1,5 +1,5 @@
 from app.prompt_builder import build_resume_prompt
-from app.gemini_client import ask_gemini
+from app.clients.gemini_client import ask_gemini
 from app.json_parser import parse_response
 from app.models import ResumeAnalysis
 

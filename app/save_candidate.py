@@ -1,4 +1,4 @@
-def candidate_storage(filename, analysis):
+def save_candidate(filename, analysis):
     with open(filename, "a", encoding="utf-8") as file:
         file.write(f"""
 Summary:

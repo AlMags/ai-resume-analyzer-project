@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 
 from app.services.resume_service import analyze_resume_text
-from app.candidate_storage import candidate_storage
+from app.save_candidate import save_candidate
 
 load_dotenv()
 
@@ -23,9 +23,9 @@ def main():
     print("Analysis complete.\n")
 
     if result.score >= 80:
-        candidate_storage("interview.txt", result)
+        save_candidate("interview.txt", result)
     else:
-        candidate_storage("review.txt", result)
+        save_candidate("review.txt", result)
 
     print("===== Resume Analysis =====\n")
 
