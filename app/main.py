@@ -1,10 +1,7 @@
 import os
-from dotenv import load_dotenv
 
 from app.services.resume_service import analyze_resume_text
 from app.save_candidate import save_candidate
-
-load_dotenv()
 
 
 def main():
