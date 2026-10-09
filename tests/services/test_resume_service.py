@@ -22,6 +22,9 @@ def test_analyze_resume_text(monkeypatch):
     def mock_parse_response(response):
         return expected_result
 
+    def mock_save_analysis(analysis):
+         assert analysis is expected_result
+
     monkeypatch.setattr(
         resume_service,
         "build_resume_prompt",
@@ -38,6 +41,12 @@ def test_analyze_resume_text(monkeypatch):
         resume_service,
         "parse_response",
         mock_parse_response
+    )
+
+    monkeypatch.setattr(
+         resume_service,
+         "save_analysis",
+         mock_save_analysis,
     )
 
     result = resume_service.analyze_resume_text(
