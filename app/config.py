@@ -10,7 +10,27 @@ def get_gemini_api_key():
 
     if not api_key:
         raise RuntimeError(
-            "GEMINI_API_KEY environment variable is required."
+            "GEMINI_API_KEY environment variable is missing."
         )
 
     return api_key
+
+def get_mongodb_uri():
+    uri = os.getenv("MONGODB_URI")
+
+    if not uri:
+        raise RuntimeError(
+            "MONGODB_URI environment variable is missing."
+        )
+
+    return uri
+
+def get_mongodb_database():
+    database = os.getenv("MONGODB_DATABASE")
+
+    if not database:
+        raise RuntimeError(
+            "MONGODB_DATABASE environment variable is missing."
+        )
+
+    return database
