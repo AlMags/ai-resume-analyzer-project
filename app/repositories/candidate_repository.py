@@ -19,4 +19,15 @@ def save_analysis(analysis: ResumeAnalysis):
     return result.inserted_id
 
 def get_all_analyses(): 
-    db = get_database
+    db = get_database()
+    collection = db["candidates"]
+
+    documents = collection.find()
+
+    analyses = []
+
+    for document in documents:
+        document["_id"] = str(document["_id"])
+        analyses.append(document)
+
+    return analyses
