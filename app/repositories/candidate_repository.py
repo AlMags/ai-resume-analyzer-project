@@ -17,3 +17,6 @@ def save_analysis(analysis: ResumeAnalysis):
     result = collection.insert_one(document)
 
     return result.inserted_id
+
+def get_all_analyses(): 
+    db = get_database

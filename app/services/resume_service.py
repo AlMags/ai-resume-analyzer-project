@@ -2,7 +2,7 @@ from app.prompt_builder import build_resume_prompt
 from app.clients.gemini_client import ask_gemini
 from app.json_parser import parse_response
 from app.models import ResumeAnalysis
-from app.repositories.save_analysis import save_analysis
+from app.repositories.candidate_repository import save_analysis
 
 
 def analyze_resume_text(resume_text: str) -> ResumeAnalysis:

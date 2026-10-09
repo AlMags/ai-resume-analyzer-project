@@ -1,4 +1,4 @@
-from app.repositories import save_analysis
+from app.repositories import candidate_repository
 
 
 def test_save_candidate(monkeypatch):
@@ -28,12 +28,12 @@ def test_save_candidate(monkeypatch):
         return MockDatabase()
 
     monkeypatch.setattr(
-        save_analysis,
+        candidate_repository,
         "get_database",
         mock_get_database,
     )
 
-    analysis = save_analysis.ResumeAnalysis(
+    analysis = candidate_repository.ResumeAnalysis(
         summary="Test summary",
         skills=["Python", "React"],
         years_experience="2 years",
@@ -41,6 +41,6 @@ def test_save_candidate(monkeypatch):
         score=85
     )
 
-    result = save_analysis.save_analysis(analysis)
+    result = candidate_repository.save_analysis(analysis)
 
     assert result is mock_inserted_id
