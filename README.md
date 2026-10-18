@@ -8,14 +8,17 @@ This project is being developed as part of a hands-on journey into AI Engineerin
 
 This project explores how Large Language Models (LLMs) can automate the extraction of structured candidate information from resumes while maintaining a clean, testable, and maintainable Python architecture.
 
-Beyond prompt engineering, the project emphasizes separation of concerns, modular application design, REST API development, database persistence, automated testing, and containerized development workflows.
+Beyond prompt engineering, the project emphasizes separation of concerns, modular application design, REST API development, database persistence, file processing, automated testing, and containerized development workflows.
 
 ## Features
 
 - Analyze resumes using Google's Gemini API.
 - Extract structured candidate information.
 - Parse AI responses into structured Python objects.
-- Expose resume analysis through a FastAPI REST API.
+- Accept resume text through a FastAPI REST API.
+- Upload and analyze resumes in PDF and TXT formats.
+- Validate uploaded files, including file type, content, readability, and size.
+- Enforce a maximum upload size of 5 MB.
 - Persist candidate analyses in MongoDB.
 - Retrieve saved analyses through the candidate retrieval endpoint.
 - Centralize environment configuration.
@@ -35,6 +38,8 @@ Beyond prompt engineering, the project emphasizes separation of concerns, modula
 | API Framework | FastAPI |
 | Database | MongoDB |
 | Database Driver | PyMongo |
+| PDF Text Extraction | pypdf |
+| File Upload Handling | python-multipart |
 | Testing | pytest |
 | API Testing | FastAPI TestClient |
 | CI/CD | GitHub Actions |
@@ -45,7 +50,7 @@ Beyond prompt engineering, the project emphasizes separation of concerns, modula
 
 ## Architecture
 
-The application follows a modular architecture that separates HTTP handling, business logic, external integrations, and data persistence.
+The application follows a modular architecture that separates HTTP handling, business logic, external integrations, file processing, and data persistence.
 
 ### Application Layers
 
@@ -55,6 +60,7 @@ The application follows a modular architecture that separates HTTP handling, bus
 - `repositories/` — Encapsulates database operations for saving and retrieving candidate analyses.
 - `models/` — Defines request and response data structures.
 - `config.py` — Centralizes environment configuration.
+- `file_extractor.py` — Extracts text from supported PDF and TXT files.
 - `prompt_builder.py` — Constructs prompts sent to the Gemini API.
 - `json_parser.py` — Parses AI-generated responses into structured Python objects.
 - `main.py` — Provides the CLI entry point.
@@ -62,12 +68,34 @@ The application follows a modular architecture that separates HTTP handling, bus
 
 ### Resume Analysis Workflow
 
-1. A client submits resume text to `POST /analyze`.
+The application supports two ways to submit a resume for analysis.
+
+#### Text-Based Analysis
+
+1. A client submits resume text to `POST /analyze` as a JSON request.
 2. The API passes the request to the resume analysis service.
 3. The service builds a prompt and calls the Gemini client.
 4. The AI response is parsed into a structured analysis.
 5. The analysis is saved to MongoDB through the repository layer.
 6. The API returns the analysis response.
+
+#### File-Based Analysis
+
+1. A client uploads a PDF or TXT resume to `POST /analyze/upload` using multipart form data.
+2. The API validates the uploaded file and enforces the 5 MB size limit.
+3. The file extractor reads the file and extracts its text content.
+4. The extracted text is passed to the existing resume analysis service.
+5. The service calls Gemini, parses the response, and saves the analysis to MongoDB.
+6. The API returns the structured analysis response.
+
+The file upload workflow reuses the existing analysis service instead of duplicating AI integration and persistence logic.
+
+**File upload limitations:**
+
+- Supported formats: PDF and TXT.
+- Maximum file size: 5 MB.
+- Empty files, unsupported formats, unreadable PDFs, and files without extractable text are rejected.
+- Scanned PDFs that do not contain extractable text are not supported because OCR is outside the current project scope.
 
 ### Candidate Retrieval Workflow
 
@@ -79,7 +107,7 @@ The application follows a modular architecture that separates HTTP handling, bus
 
 ## Project Structure
 
-The following tree represents the main application and testing modules. Update it if your local repository contains additional files.
+The following tree represents the main application and testing modules. Adjust it if your repository contains additional files.
 
 ```text
 ai-resume-analyzer-project/
@@ -101,6 +129,7 @@ ai-resume-analyzer-project/
 │   │   ├── candidate_service.py
 │   │   └── resume_service.py
 │   ├── config.py
+│   ├── file_extractor.py
 │   ├── json_parser.py
 │   ├── main.py
 │   ├── prompt_builder.py
@@ -118,7 +147,11 @@ ai-resume-analyzer-project/
 │   │   └── test_mongodb_client.py
 │   ├── config/
 │   │   └── test_config.py
+│   ├── fixtures/
+│   │   ├── sample_resume.txt
+│   │   └── sample_resume.pdf
 │   ├── parsers/
+│   │   ├── test_file_extractor.py
 │   │   └── test_json_parser.py
 │   ├── prompts/
 │   │   └── test_prompt_builder.py
@@ -149,8 +182,7 @@ Install the following tools:
 - Python 3.12, if running the application directly on your machine.
 - Docker Desktop with Docker Compose.
 - A Google Gemini API key.
-
-Git is also required to clone the repository.
+- Git to clone the repository.
 
 ### Clone the Repository
 
@@ -275,11 +307,11 @@ Example response:
 }
 ```
 
-### Resume Analysis
+### Resume Analysis Using Text
 
 **`POST /analyze`**
 
-Accepts resume text, requests an analysis from Gemini, saves the result to MongoDB, and returns the structured analysis.
+Accepts resume text as JSON, requests an analysis from Gemini, saves the result to MongoDB, and returns the structured analysis.
 
 Example request:
 
@@ -290,6 +322,51 @@ Example request:
 ```
 
 The response contains structured candidate information, including a summary, skills, years of experience, recommended role, and score.
+
+### Resume Analysis Using a File
+
+**`POST /analyze/upload`**
+
+Accepts a PDF or TXT resume using `multipart/form-data`, extracts the text, and sends it through the existing resume analysis workflow.
+
+**Upload requirements:**
+
+| Requirement | Details |
+|---|---|
+| Accepted formats | PDF and TXT |
+| Maximum size | 5 MB |
+| Request content type | `multipart/form-data` |
+| Form field | `file` |
+| Empty or unreadable files | Rejected |
+| Unsupported file types | Rejected |
+| Scanned PDFs without extractable text | Not supported |
+
+#### Example Using cURL
+
+Upload a TXT resume:
+
+```bash
+curl -X POST "http://localhost:8000/analyze/upload" \
+  -F "file=@tests/fixtures/sample_resume.txt"
+```
+
+Upload a PDF resume:
+
+```bash
+curl -X POST "http://localhost:8000/analyze/upload" \
+  -F "file=@tests/fixtures/sample_resume.pdf"
+```
+
+These examples assume you run the commands from the repository root and the sample files exist at the specified paths.
+
+The response uses the same structured analysis format as `POST /analyze`. Actual results depend on the uploaded resume and Gemini's analysis.
+
+Possible validation responses include:
+
+- `400 Bad Request` — Unsupported file type, empty file, unreadable file, or no extractable text.
+- `413 Payload Too Large` — Upload exceeds the 5 MB limit.
+
+Use the interactive API documentation at http://localhost:8000/docs to upload files through Swagger UI without manually constructing a multipart request.
 
 ### Retrieve Candidate Analyses
 
@@ -332,11 +409,14 @@ Run tests for a specific area:
 python -m pytest tests/api -v
 python -m pytest tests/services -v
 python -m pytest tests/repositories -v
+python -m pytest tests/parsers -v
 ```
 
 The test suite covers areas such as:
 
 - FastAPI endpoints and response behavior.
+- PDF and TXT text extraction.
+- Upload validation, including unsupported formats, empty files, unreadable PDFs, and oversized uploads.
 - Gemini client behavior.
 - MongoDB client and repository operations.
 - Environment configuration.
@@ -351,9 +431,11 @@ External dependencies are mocked where appropriate so tests can verify applicati
 
 The project applies several software engineering principles:
 
-- **Separation of concerns:** API routes, business logic, external integrations, and persistence operations are organized into separate modules.
+- **Separation of concerns:** API routes, business logic, external integrations, file extraction, and persistence operations are organized into separate modules.
 - **Repository pattern:** Database operations are isolated from business logic.
 - **Service layer:** Application workflows are kept separate from HTTP request handling.
+- **Reusable analysis workflow:** Both text-based and file-based requests use the same resume analysis service.
+- **Input validation:** Uploaded files are checked for supported formats, valid content, readability, and size limits.
 - **Centralized configuration:** Environment-dependent settings are managed through `config.py`.
 - **Structured AI output:** Gemini responses are parsed into predictable data structures.
 - **Automated testing:** pytest tests application components and behavior.
@@ -368,6 +450,7 @@ This project supports practical learning in:
 - Python application architecture.
 - AI API integration and prompt engineering.
 - REST API development with FastAPI.
+- File uploads and text extraction from PDFs and TXT files.
 - Database integration with MongoDB.
 - Repository and service layer design.
 - Automated testing and mocking.
@@ -395,10 +478,9 @@ This project supports practical learning in:
 - [x] Persist candidate analyses in MongoDB.
 - [x] Retrieve saved candidate analyses.
 - [x] Expose candidate retrieval through the API.
-
-### In Progress
-
-- [ ] Resume upload endpoint.
+- [x] Extract text from PDF and TXT resumes.
+- [x] Upload resumes through `POST /analyze/upload`.
+- [x] Validate upload type, content, readability, and size.
 
 ### Planned
 
